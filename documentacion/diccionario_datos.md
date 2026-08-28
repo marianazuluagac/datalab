@@ -31,7 +31,7 @@
 - id_experimento — FK
 - nombre
 - version
-- algoritmo
+- algoritmo'
 
 ## METRICA
 - id_metrica — PK
