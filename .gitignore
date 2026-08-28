@@ -1,0 +1,148 @@
+### `.gitignore`
+
+```gitignore
+# ============================================================
+# DataLab - Bases de Datos
+# Archivos ignorados por Git
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Sistema operativo
+# ------------------------------------------------------------
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+
+# ------------------------------------------------------------
+# Editores e IDE
+# ------------------------------------------------------------
+
+.vscode/
+.idea/
+
+# Archivos temporales de editores
+*.swp
+*.swo
+*.tmp
+*.bak
+
+
+# ------------------------------------------------------------
+# Python
+# ------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.venv/
+venv/
+env/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+
+*.egg-info/
+
+
+# ------------------------------------------------------------
+# Jupyter Notebook
+# ------------------------------------------------------------
+
+.ipynb_checkpoints/
+
+
+# ------------------------------------------------------------
+# Variables de entorno y credenciales
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+# Credenciales
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Archivos de configuración local que puedan contener secretos
+config.local.*
+secrets.*
+
+
+# ------------------------------------------------------------
+# Bases de datos locales
+# ------------------------------------------------------------
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos temporales de motores de bases de datos
+*.log
+
+
+# ------------------------------------------------------------
+# Archivos temporales
+# ------------------------------------------------------------
+
+*.temp
+*.cache
+*.swp
+*.swo
+
+temp/
+tmp/
+
+
+# ------------------------------------------------------------
+# Archivos comprimidos
+# ------------------------------------------------------------
+
+# Evitar subir archivos comprimidos como entregables
+*.zip
+*.rar
+*.7z
+
+
+# ------------------------------------------------------------
+# Archivos generados automáticamente
+# ------------------------------------------------------------
+
+build/
+dist/
+out/
+
+coverage/
+htmlcov/
+
+
+# ------------------------------------------------------------
+# Credenciales y cadenas de conexión
+# ------------------------------------------------------------
+
+# Archivos que puedan contener conexiones locales
+connection.properties
+database.properties
+credentials.json
+
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+
+*.log
+logs/
