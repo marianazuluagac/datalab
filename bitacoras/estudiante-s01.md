@@ -1,194 +1,135 @@
-# Semana 1 — Guía del Estudiante
+Semana 1 — Guía del Estudiante
+Modelado Conceptual y Diseño Entidad-Relación (2.1–2.8)
+Caso hilo conductor: DataLab
 
-## Modelado Conceptual y Diseño Entidad-Relación (2.1–2.8)
-### Caso hilo conductor: DataLab
+MARIANA ZULUAGA 
+LAURA GUARNIZO
+DONOVAN GARCÍA
+___
 
----
+BLOQUE 1 — Laboratorio
+Actividad 1 — Lectura y extracción cruda
 
-## Objetivos de la semana
+a) ¿De qué "cosas" del negocio de DataLab se necesita guardar información?
 
-Al final de esta semana estarán en capacidad de:
+Se necesita guardar información sobre:
 
-- Explicar qué es el diseño conceptual y por qué es independiente del motor de base de datos.
-- Diferenciar los niveles de modelado: conceptual, lógico, físico.
-- Aplicar la notación del modelo entidad-relación de Chen.
-- Clasificar entidades, atributos y relaciones a partir de un enunciado en lenguaje natural.
-- Determinar cardinalidad y participación, justificando con base en el enunciado.
-- Diferenciar llave candidata de llave primaria y justificar la elección.
-- Usar una herramienta de modelado para documentar un diagrama E-R.
-- Entregar el modelo E-R completo de DataLab — **Hito 1** del semestre.
+Científicos de datos.
+Áreas laborales.
+Proyectos.
+Participaciones de los científicos en los proyectos.
+Datasets.
+Experimentos.
+Uso de datasets en los experimentos.
+Modelos entrenados.
+Métricas de desempeño de los modelos.
 
-**Equipo:** ______________________ **Integrantes:** ______________________________________
+b) ¿Qué preguntas le harían al equipo de ciencia de datos antes de empezar a modelar?
 
----
+¿Un científico de datos puede participar en varios proyectos?
+¿Un proyecto puede tener varios científicos de datos?
+¿Un dataset puede utilizarse en varios experimentos?
+¿Un experimento puede utilizar varios datasets?
+¿Cada experimento produce un solo modelo o puede producir varios?
+¿Un modelo puede tener varias métricas de desempeño?
+¿Qué información se necesita guardar de cada proyecto?
+¿Qué información se necesita guardar de cada experimento?
+¿Qué datos identifican de forma única a un científico, proyecto, dataset, experimento y modelo?
 
-## El caso: DataLab
+c) Reto Feynman: ¿Qué es un "Experimento" en DataLab?
 
-> DataLab es la plataforma interna que usa un equipo de ciencia de datos para llevar el control de sus proyectos de inteligencia artificial. Cada científico de datos del equipo puede participar en uno o varios proyectos, y cada proyecto agrupa el trabajo alrededor de un problema de negocio concreto (por ejemplo, "Detección de fraude en transacciones" o "Clasificación de imágenes médicas"). Para resolver un proyecto, el equipo se apoya en datasets: conjuntos de datos con un nombre, una fuente (interna o externa), una fecha de carga y un tamaño en filas; un mismo dataset puede reutilizarse en varios experimentos, incluso de proyectos distintos. Dentro de cada proyecto se ejecutan experimentos: cada experimento usa un dataset, fue ejecutado por un científico de datos del equipo, tiene una fecha de ejecución y una configuración (los hiperparámetros usados en esa corrida). Cuando un experimento resulta exitoso, produce un modelo entrenado, identificado por un nombre, una versión y un algoritmo (por ejemplo, "Random Forest" o "Red neuronal convolucional"). Cada modelo se evalúa con una o varias métricas de desempeño (accuracy, precisión, F1-score, entre otras), cada una con su valor numérico y la fecha en que fue calculada.
+Un experimento es una ejecución realizada dentro de un proyecto de ciencia de datos en la que un científico utiliza datos y una configuración determinada, como los hiperparámetros, para obtener un resultado y posiblemente generar un modelo.
 
-Este será el caso que van a construir, capa sobre capa, durante todo el semestre. Todo lo que hagan hoy lo van a volver a tocar en las próximas 13 semanas.
+Actividad 2 — Primer boceto
 
----
+Herramienta usada: draw.io
 
-## BLOQUE 1 — Laboratorio (3 horas, con PC)
+El primer boceto contiene las entidades principales del proyecto DataLab, sus atributos y las relaciones entre ellas.
 
-### Hito 0 — Preparar el repositorio (15 min)
+Actividad 3 — Puesta en común
 
-1. Formen su equipo (3-4 integrantes).
-2. Creen el repositorio `datalab-<equipo>` con esta estructura:
+a) ¿En qué se parece su boceto al de otros equipos?
 
-```
-datalab-<equipo>/
-├── README.md
-├── .gitignore
-├── diagramas/e-r/
-├── scripts/{ddl,dml,consultas}/
-├── casos_uso/
-├── documentacion/
-├── mongodb/
-└── bitacoras/
-```
+Nuestro boceto se parece al de otros equipos porque identificamos las mismas entidades principales del caso DataLab, como CIENTIFICO_DATOS, PROYECTO, DATASET, EXPERIMENTO, MODELO y METRICA, además de las relaciones entre ellas.
 
-3. Primer commit: `git commit -m "modelo: estructura inicial del repositorio"`.
-4. Den acceso de lectura al docente.
+b) ¿En qué se diferencia? ¿Alguna diferencia les genera dudas?
 
-### Actividad 1 — Lectura y extracción cruda (30 min)
+Se diferencia principalmente en la forma de representar algunas relaciones y en la cantidad de atributos incluidos en cada entidad. Algunas diferencias nos generaron dudas sobre la cardinalidad entre DATASET y EXPERIMENTO y sobre la relación entre EXPERIMENTO y MODELO.
 
-**Sin dibujar nada todavía**, respondan en su bitácora (`bitacoras/s01-<nombre>.md`):
+c) Preguntas abiertas que les quedan después de ver otros bocetos:
 
-**a)** ¿De qué "cosas" del negocio de DataLab se necesita guardar información? Listen todas las que encuentren, en sus propias palabras.
+¿La relación entre DATASET y EXPERIMENTO es 1:N o N:M?
+¿Un experimento puede producir más de un modelo?
+¿Un modelo puede pertenecer a más de un experimento?
+¿Todos los atributos identificados son necesarios?
+Actividad 4 — Commit del boceto
 
-_______________________________________________________________________________
+Archivo: diagramas/e-r/s01-boceto-inicial.png
 
-_______________________________________________________________________________
+Commit:
 
-**b)** ¿Qué preguntas le harían al equipo de ciencia de datos antes de empezar a modelar?
+git commit -m "modelo: boceto inicial del diagrama E-R de DataLab"
+BLOQUE 2 — Formalización
+Niveles de modelado — verificación rápida
+Frase	Nivel
+"Un experimento puede producir, como máximo, un modelo"	Conceptual
+"La tabla EXPERIMENTO tiene una llave foránea id_dataset"	Lógico
+"La columna fecha_ejecucion es de tipo DATE"	Físico
+Corrección del boceto con notación de Chen
 
-_______________________________________________________________________________
+a) ¿algoritmo en su boceto quedó como atributo o como entidad? Si quedó como entidad, ¿por qué debería ser atributo de MODELO?
 
-_______________________________________________________________________________
+algoritmo quedó como atributo de MODELO porque describe una característica del modelo. No es necesario crear una entidad independiente para almacenar esta información.
 
-**c)** Reto Feynman: expliquen en voz alta a su compañero de equipo qué es un "Experimento" en DataLab, **sin usar la palabra "entidad"**. Si se traban, ahí hay algo que todavía no tienen claro — vuelvan al enunciado antes de seguir.
+b) ¿DATASET es una entidad fuerte o débil en su modelo? Justifiquen.
 
-### Actividad 2 — Primer boceto (45 min)
+DATASET es una entidad fuerte porque puede identificarse por sí misma mediante una llave propia, id_dataset, y no depende de otra entidad para existir.
 
-Abran una herramienta de modelado (ERDPlus o draw.io recomendadas). Construyan su primer intento de diagrama E-R con lo que identificaron en la Actividad 1: entidades, algunos atributos, relaciones. No se preocupen por que quede perfecto — este es un primer boceto exploratorio.
+c) ¿EXPERIMENTO quedó modelado como entidad o como relación en su boceto original? Si quedó como relación, ¿qué atributos propios tiene que solo tienen sentido si EXPERIMENTO es entidad?
 
-**Herramienta usada:** _______________________
+EXPERIMENTO se modeló como entidad porque tiene información propia, como id_experimento, nombre_experimento, fecha_ejecucion, configuracion, estado y resultado_resumen. Estos atributos describen directamente al experimento.
 
-### Descanso (15 min)
+Cardinalidad y participación
+Relación	Cardinalidad	Participación (¿por qué?)
+CIENTIFICO_DATOS – participa en – PROYECTO	N:M	Un científico puede participar en varios proyectos y un proyecto puede tener varios científicos.
+DATASET – se usa en – EXPERIMENTO	N:M	Un dataset puede utilizarse en varios experimentos y un experimento puede utilizar varios datasets.
+EXPERIMENTO – produce – MODELO	1:1	Un experimento exitoso produce como máximo un modelo y cada modelo proviene de un experimento.
+MODELO – se evalúa con – METRICA	1:N	Un modelo puede evaluarse mediante varias métricas y cada métrica pertenece a un modelo.
+Ejercicios rápidos — otros contextos de datos e IA
 
-### Actividad 3 — Puesta en común (45 min)
+a) Pipeline de anotación de datos
 
-Van a proyectar su boceto ante el resto del curso. Mientras ven los bocetos de los demás equipos, anoten:
+La relación entre ANOTADOR e IMAGEN es N:M, porque un anotador puede etiquetar varias imágenes y una imagen puede ser revisada por más de un anotador. La participación del anotador es total si todos deben etiquetar imágenes, mientras que la de la imagen puede ser parcial porque no necesariamente todas las imágenes tienen que ser revisadas por un segundo anotador.
 
-**a)** ¿En qué se parece su boceto al de otros equipos?
+b) Plataforma de MLOps
 
-_______________________________________________________________________________
+La relación MODELO–DESPLIEGUE es 1:N, porque un modelo puede desplegarse en varios ambientes, mientras que cada despliegue corresponde a un solo modelo.
 
-**b)** ¿En qué se diferencia? ¿Alguna diferencia les genera dudas sobre cuál versión es la correcta?
+Llaves primarias y candidatas
 
-_______________________________________________________________________________
+La entidad EXPERIMENTO tiene los atributos:
 
-**c)** Preguntas abiertas que les quedan después de ver otros bocetos:
+id_experimento_interno, nombre_experimento, fecha_ejecucion, configuracion.
 
-_______________________________________________________________________________
+a) ¿Cuál es la llave candidata más evidente?
 
-_______________________________________________________________________________
+La llave candidata más evidente es id_experimento_interno, porque permite identificar de manera única cada experimento.
 
-### Actividad 4 — Commit del boceto (30 min)
+b) ¿Por qué nombre_experimento no sirve como llave por sí sola?
 
-1. Exporten su boceto como imagen a `diagramas/e-r/s01-boceto-inicial.png`.
-2. Commit: `git commit -m "modelo: boceto inicial del diagrama E-R de DataLab"`.
-3. Escriban en `documentacion/decisiones.md` las preguntas abiertas de la Actividad 3 — las van a resolver en la sesión de formalización.
+Porque pueden existir varios experimentos con el mismo nombre. Por lo tanto, el nombre no garantiza que cada experimento pueda identificarse de forma única.
 
----
+c) Llaves candidatas y primarias de las otras entidades de DataLab
 
-## BLOQUE 2 — Formalización (2 horas, sin PC)
-
-### Retomando las preguntas abiertas
-
-Antes de seguir, revisen la lista de preguntas abiertas que dejaron en `documentacion/decisiones.md`. El docente va a resolverlas junto con ustedes en esta sesión — guárdenlas a la vista.
-
-### Niveles de modelado — verificación rápida
-
-Clasifiquen cada frase como **conceptual**, **lógico** o **físico**:
-
-| Frase | Nivel |
-|---|---|
-| "Un experimento puede producir, como máximo, un modelo" | |
-| "La tabla EXPERIMENTO tiene una llave foránea id_dataset" | |
-| "La columna fecha_ejecucion es de tipo DATE" | |
-
-### Corrección del boceto con notación de Chen
-
-Con la explicación del docente, corrijan en papel su propio boceto de la Actividad 2. Marquen con un color los cambios respecto al boceto original — esa comparación es la evidencia de lo que aprendieron hoy.
-
-**Preguntas guía para la corrección:**
-
-**a)** ¿`algoritmo` en su boceto quedó como atributo o como entidad? Si quedó como entidad, ¿por qué debería ser atributo de MODELO?
-
-_______________________________________________________________________________
-
-**b)** ¿DATASET es una entidad fuerte o débil en su modelo? Justifiquen.
-
-_______________________________________________________________________________
-
-**c)** ¿EXPERIMENTO quedó modelado como entidad o como relación en su boceto original? Si quedó como relación, ¿qué atributos propios tiene que solo tienen sentido si EXPERIMENTO es entidad?
-
-_______________________________________________________________________________
-
-### Cardinalidad y participación
-
-Para cada relación, determinen la cardinalidad (1:1, 1:N o N:M) y la participación (total o parcial) de cada lado, con una frase que lo justifique:
-
-| Relación | Cardinalidad | Participación (¿por qué?) |
-|---|---|---|
-| CIENTIFICO_DATOS – participa en – PROYECTO | | |
-| DATASET – se usa en – EXPERIMENTO | | |
-| EXPERIMENTO – produce – MODELO | | |
-| MODELO – se evalúa con – METRICA | | |
-
-**Ejercicios rápidos — otros contextos de datos e IA:**
-
-**a)** *Pipeline de anotación de datos:* "Un anotador etiqueta imágenes; cada imagen puede ser revisada por un segundo anotador antes de aprobarse." ¿Cardinalidad y participación entre ANOTADOR e IMAGEN?
-
-_______________________________________________________________________________
-
-**b)** *Plataforma de MLOps:* "Un modelo en producción puede desplegarse en varios ambientes (staging, producción); cada despliegue tiene su propia fecha y versión de infraestructura." ¿MODELO–DESPLIEGUE es 1:N o N:M? ¿Por qué?
-
-_______________________________________________________________________________
-
-### Llaves primarias y candidatas
-
-La entidad EXPERIMENTO tiene los atributos: `id_experimento_interno`, `nombre_experimento`, `fecha_ejecucion`, `configuracion`.
-
-**a)** ¿Cuál es la llave candidata más evidente?
-
-_______________________________________________________________________________
-
-**b)** ¿Por qué `nombre_experimento` no sirve como llave por sí sola?
-
-_______________________________________________________________________________
-
-**c)** Ahora identifiquen las llaves candidatas y primarias de las otras 5 entidades de DataLab:
-
-| Entidad | Llave(s) candidata(s) | Llave primaria elegida | Justificación |
-|---|---|---|---|
-| CIENTIFICO_DATOS | | | |
-| PROYECTO | | | |
-| DATASET | | | |
-| MODELO | | | |
-| METRICA | | | |
-
----
-
-## Entregable — Hito 1 (antes de la Semana 2)
-
-- [ ] Diagrama E-R final y corregido en `diagramas/e-r/s01-modelo-final.png` (o enlace de la herramienta).
-- [ ] Diccionario de datos completo en `documentacion/diccionario_datos.md` (entidad, atributo, tipo de atributo, llave candidata/primaria).
-- [ ] Todas las decisiones de diseño discutidas hoy, registradas en `documentacion/decisiones.md`.
-- [ ] Commit final: `git commit -m "modelo: diagrama E-R final de DataLab (Hito 1)"`.
-- [ ] Tag: `git tag h1-modelo-er`.
-
-**Recuerden:** el historial de commits de hoy (boceto → correcciones → versión final) es evidencia de su proceso, no solo del resultado. No lo aplasten en un único commit al final.
+Entidad	Llave(s) candidata(s)	Llave primaria elegida	Justificación
+CIENTIFICO_DATOS	id_cientifico	id_cientifico	Identifica de manera única a cada científico de datos.
+PROYECTO	id_proyecto	id_proyecto	Identifica de manera única cada proyecto.
+DATASET	id_dataset	id_dataset	Permite identificar de forma única cada dataset.
+MODELO	id_modelo	id_modelo	Identifica de manera única cada modelo.
+METRICA	id_metrica	id_metrica	Identifica de manera única cada métrica.
+Entregable — Hito 1
+ Diagrama E-R final y corregido en diagramas/e-r/s01-modelo-final.png.
+ Diccionario de datos completo en documentacion/diccionario_datos.md.
+ Decisiones de diseño registradas en documentacion/decisiones.md.
+ Commit final realizado.
+ Tag h1-modelo-er creado.
