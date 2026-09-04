@@ -1,41 +1,73 @@
-# Diccionario de datos
-
-## CIENTIFICO_DATOS
-- id_cientifico — PK
-
-## PROYECTO
-- id_proyecto — PK
-
-## PARTICIPACION
-- id_cientifico — PK, FK
-- id_proyecto — PK, FK
-
-## DATASET
-- id_dataset — PK
-- nombre
-- fuente
-- fecha_carga
-- tamano_filas
-
-## EXPERIMENTO
-- id_experimento — PK
-- id_proyecto — FK
-- id_cientifico — FK
-- id_dataset — FK
-- nombre_experimento
-- fecha_ejecucion
-- configuracion
-
-## MODELO
-- id_modelo — PK
-- id_experimento — FK
-- nombre
-- version
-- algoritmo'
-
-## METRICA
-- id_metrica — PK
-- id_modelo — FK
-- nombre
-- valor
-- fecha_calculo
+| Tabla               | Columna                     | Tipo de dato  | Restricciones                              |
+| ------------------- | --------------------------- | ------------- | ------------------------------------------ |
+| area_laboral        | id_area **(PK)**            | INT           | NOT NULL, Solo números                     |
+| area_laboral        | nombre_area                 | VARCHAR(100)  | NOT NULL, Solo caracteres                  |
+| area_laboral        | descripcion                 | TEXT          | Solo caracteres                            |
+| area_laboral        | sector                      | VARCHAR(100)  | Solo caracteres                            |
+| cientifico_datos    | id_cientifico **(PK)**      | INT           | NOT NULL, Solo números                     |
+| cientifico_datos    | nombre_completo             | VARCHAR(150)  | NOT NULL, Solo caracteres                  |
+| cientifico_datos    | fecha_nacimiento            | DATE          | Fecha válida                               |
+| cientifico_datos    | genero                      | VARCHAR(30)   | Solo caracteres                            |
+| cientifico_datos    | correo                      | VARCHAR(150)  | NOT NULL, UNIQUE, Formato de correo válido |
+| cientifico_datos    | telefono                    | VARCHAR(20)   | Solo números y símbolos telefónicos        |
+| cientifico_datos    | universidad                 | VARCHAR(150)  | Solo caracteres                            |
+| cientifico_datos    | carrera                     | VARCHAR(150)  | Solo caracteres                            |
+| cientifico_datos    | fecha_ingreso               | DATE          | Fecha válida                               |
+| cientifico_datos    | titulo_academico            | VARCHAR(150)  | Solo caracteres                            |
+| cientifico_datos    | id_area **(FK)**            | INT           | NOT NULL, Solo números                     |
+| proyecto            | id_proyecto **(PK)**        | INT           | NOT NULL, Solo números                     |
+| proyecto            | nombre_proyecto             | VARCHAR(150)  | NOT NULL, Solo caracteres                  |
+| proyecto            | descripcion                 | TEXT          | Solo caracteres                            |
+| proyecto            | fecha_inicio                | DATE          | Fecha válida                               |
+| proyecto            | fecha_fin                   | DATE          | Fecha válida                               |
+| proyecto            | estado                      | VARCHAR(50)   | DEFAULT 'Activo', Solo caracteres          |
+| proyecto            | presupuesto                 | DECIMAL(12,2) | CHECK >= 0, Solo números                   |
+| participacion       | id_cientifico **(PK, FK)**  | INT           | NOT NULL, Solo números                     |
+| participacion       | id_proyecto **(PK, FK)**    | INT           | NOT NULL, Solo números                     |
+| participacion       | rol_en_proyecto             | VARCHAR(100)  | Solo caracteres                            |
+| participacion       | fecha_asignacion            | DATE          | Fecha válida                               |
+| participacion       | porcentaje_participacion    | DECIMAL(5,2)  | CHECK entre 0 y 100, Solo números          |
+| participacion       | estado                      | VARCHAR(50)   | DEFAULT 'Activo', Solo caracteres          |
+| dataset             | id_dataset **(PK)**         | INT           | NOT NULL, Solo números                     |
+| dataset             | nombre                      | VARCHAR(150)  | NOT NULL, Solo caracteres                  |
+| dataset             | descripcion                 | TEXT          | Solo caracteres                            |
+| dataset             | fuente                      | VARCHAR(200)  | Solo caracteres                            |
+| dataset             | fecha_carga                 | DATE          | Fecha válida                               |
+| dataset             | tamano_filas                | INT           | CHECK >= 0, Solo números                   |
+| dataset             | tamano_columnas             | INT           | CHECK >= 0, Solo números                   |
+| dataset             | tipo_datos                  | VARCHAR(100)  | Solo caracteres                            |
+| dataset             | licencia                    | VARCHAR(100)  | Solo caracteres                            |
+| dataset             | url_repositorio             | VARCHAR(500)  | Formato URL válido                         |
+| experimento         | id_experimento **(PK)**     | INT           | NOT NULL, Solo números                     |
+| experimento         | id_proyecto **(FK)**        | INT           | NOT NULL, Solo números                     |
+| experimento         | id_cientifico **(FK)**      | INT           | NOT NULL, Solo números                     |
+| experimento         | nombre_experimento          | VARCHAR(150)  | NOT NULL, Solo caracteres                  |
+| experimento         | descripcion                 | TEXT          | Solo caracteres                            |
+| experimento         | fecha_ejecucion             | DATE          | Fecha válida                               |
+| experimento         | fecha_fin                   | DATE          | Fecha válida                               |
+| experimento         | configuracion               | TEXT          | Solo caracteres                            |
+| experimento         | estado                      | VARCHAR(50)   | DEFAULT 'Activo', Solo caracteres          |
+| experimento         | resultado_resumen           | TEXT          | Solo caracteres                            |
+| experimento_dataset | id_experimento **(PK, FK)** | INT           | NOT NULL, Solo números                     |
+| experimento_dataset | id_dataset **(PK, FK)**     | INT           | NOT NULL, Solo números                     |
+| experimento_dataset | rol_en_experimento          | VARCHAR(100)  | Solo caracteres                            |
+| experimento_dataset | fecha_uso                   | DATE          | Fecha válida                               |
+| experimento_dataset | version_dataset             | VARCHAR(50)   | Solo caracteres                            |
+| experimento_dataset | observaciones               | TEXT          | Solo caracteres                            |
+| modelo              | id_modelo **(PK)**          | INT           | NOT NULL, Solo números                     |
+| modelo              | id_experimento **(FK)**     | INT           | UNIQUE, NOT NULL, Solo números             |
+| modelo              | nombre                      | VARCHAR(150)  | NOT NULL, Solo caracteres                  |
+| modelo              | version                     | VARCHAR(50)   | Solo caracteres                            |
+| modelo              | algoritmo                   | VARCHAR(100)  | Solo caracteres                            |
+| modelo              | descripcion                 | TEXT          | Solo caracteres                            |
+| modelo              | fecha_creacion              | DATE          | Fecha válida                               |
+| modelo              | estado                      | VARCHAR(50)   | DEFAULT 'Activo', Solo caracteres          |
+| modelo              | rendimiento_general         | DECIMAL(10,4) | Solo números                               |
+| metrica             | id_metrica **(PK)**         | INT           | NOT NULL, Solo números                     |
+| metrica             | id_modelo **(FK)**          | INT           | NOT NULL, Solo números                     |
+| metrica             | nombre                      | VARCHAR(100)  | NOT NULL, Solo caracteres                  |
+| metrica             | descripcion                 | TEXT          | Solo caracteres                            |
+| metrica             | valor                       | DECIMAL(10,4) | Solo números                               |
+| metrica             | unidad                      | VARCHAR(50)   | Solo caracteres                            |
+| metrica             | fecha_calculo               | DATE          | Fecha válida                               |
+| metrica             | tipo                        | VARCHAR(50)   | Solo caracteres                            |
