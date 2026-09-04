@@ -1,4 +1,23 @@
-| Tabla               | Columna                     | Tipo de dato  | Restricciones                              |
+
+| Tabla                   | Descripción                                                                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **area_laboral**        | Almacena las áreas laborales o campos de especialización en los que trabajan los científicos de datos.                                                       |
+| **cientifico_datos**    | Registra la información personal, académica y laboral de los científicos de datos que participan en los proyectos.                                           |
+| **proyecto**            | Contiene la información de los proyectos de ciencia de datos, incluyendo su nombre, descripción, fechas, estado y presupuesto.                               |
+| **participacion**       | Registra la participación de los científicos de datos en cada proyecto, indicando su rol, porcentaje de participación, fecha de asignación y estado.         |
+| **dataset**             | Almacena la información de los conjuntos de datos utilizados en los proyectos y experimentos, como su fuente, tamaño, tipo de datos, licencia y repositorio. |
+| **experimento**         | Registra los experimentos realizados dentro de los proyectos, incluyendo el científico responsable, configuración, fechas, estado y resultados obtenidos.    |
+| **experimento_dataset** | Registra qué datasets son utilizados en cada experimento, indicando el rol que cumplen, la versión utilizada y las observaciones correspondientes.           |
+| **modelo**              | Almacena los modelos de aprendizaje automático creados a partir de los experimentos, incluyendo su algoritmo, versión, estado y rendimiento general.         |
+| **metrica**             | Registra las métricas utilizadas para evaluar el rendimiento de los modelos, incluyendo su valor, unidad, tipo y fecha de cálculo.                           |
+
+
+
+
+
+
+
+ Tabla               | Columna                     | Tipo de dato  | Restricciones                              |
 | ------------------- | --------------------------- | ------------- | ------------------------------------------ |
 | area_laboral        | id_area **(PK)**            | INT           | NOT NULL, Solo números                     |
 | area_laboral        | nombre_area                 | VARCHAR(100)  | NOT NULL, Solo caracteres                  |
