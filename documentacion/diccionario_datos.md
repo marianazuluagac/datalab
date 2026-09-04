@@ -11,11 +11,7 @@
 | **modelo**              | Almacena los modelos de aprendizaje automático creados a partir de los experimentos, incluyendo su algoritmo, versión, estado y rendimiento general.         |
 | **metrica**             | Registra las métricas utilizadas para evaluar el rendimiento de los modelos, incluyendo su valor, unidad, tipo y fecha de cálculo.                           |
 
-
-
-
-
-
+# Especificación de la Base de Datos
 
  Tabla               | Columna                     | Tipo de dato  | Restricciones                              |
 | ------------------- | --------------------------- | ------------- | ------------------------------------------ |
