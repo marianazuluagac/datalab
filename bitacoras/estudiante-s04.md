@@ -165,21 +165,137 @@ Actualicen su archivo `.dbml` (o el modelo en MySQL Workbench) agregando la pol�
 
 ---
 
-## Verificación de comprensión — antes de salir
+## Respuestas de verificación de comprensión
 
-**1.** ¿Cuál es la diferencia entre `RESTRICT` y `CASCADE`?
+**1. ¿Cuál es la diferencia entre `RESTRICT` y `CASCADE`?**
 
-_______________________________________________________________________________
+`RESTRICT` impide eliminar un registro padre cuando existen registros relacionados, mientras que `CASCADE` elimina automáticamente los registros relacionados cuando se elimina el registro padre.
 
-**2.** ¿Por qué 2FN solo importa cuando la llave primaria es compuesta?
+**2. ¿Por qué 2FN solo importa cuando la llave primaria es compuesta?**
 
-_______________________________________________________________________________
+Porque la 2FN busca evitar dependencias parciales. Estas ocurren cuando un atributo depende solamente de una parte de una llave primaria compuesta. Si la llave primaria tiene una sola columna, no puede existir una dependencia parcial.
 
-**3.** Si su esquema fue construido correctamente a partir del modelo E-R, ¿por qué es esperable que ya esté en 3FN?
+**3. Si su esquema fue construido correctamente a partir del modelo E-R, ¿por qué es esperable que ya esté en 3FN?**
 
-_______________________________________________________________________________
+Porque al convertir correctamente el modelo E-R al modelo relacional, cada entidad tiene su propia tabla y sus atributos correspondientes, mientras que las relaciones se representan mediante llaves foráneas. Esto evita repetir información y reduce las dependencias transitivas entre los atributos.
 
 ---
+
+## Cierre de la actividad
+
+Se completó la revisión de integridad referencial y normalización del esquema de DataLab. Se definieron las políticas `ON DELETE` para las llaves foráneas, se realizó la auditoría de 1FN, 2FN y 3FN y se confirmó que las tablas actuales cumplen con la normalización básica.
+
+También se debe actualizar el archivo `.dbml` con las políticas de eliminación definidas y exportar el diagrama actualizado como:
+
+`diagramas/relacional/s04-esquema-integridad.png`
+
+Finalmente, se realizará el commit correspondiente:
+
+`git commit -m "modelo: políticas de integridad referencial y auditoría de normalización de DataLab"`
+
+
+---
+
+## Preguntas de análisis adicionales
+
+### ¿Por qué podría ser importante impedir que se elimine un proyecto que todavía tiene experimentos?
+
+Porque los experimentos dependen del proyecto y conservan información relacionada con él. Si se eliminara el proyecto, se podría perder la relación y el historial de los experimentos. Por eso `RESTRICT` permite proteger la información y evitar eliminaciones que afecten datos relacionados.
+
+### ¿Qué información se perdería y qué información se conservaría en un escenario con `SET NULL`?
+
+Se perdería la relación entre el registro hijo y el registro padre, ya que la llave foránea pasaría a ser `NULL`. Sin embargo, se conservaría la información propia del registro hijo, siempre que este pueda existir sin el registro padre.
+
+---
+
+# Preguntas de profundización
+
+### Pregunta 1
+
+**Si `metrica.id_modelo` utiliza `ON DELETE CASCADE`, ¿qué riesgo existe si un usuario elimina accidentalmente un modelo?**
+
+El riesgo es que todas las métricas relacionadas con ese modelo se eliminen automáticamente. Esto podría provocar pérdida de información que podría ser útil para conservar el historial y analizar el rendimiento del modelo.
+
+### Pregunta 2
+
+**¿Por qué podría ser preferible `RESTRICT` para una relación entre `proyecto` y `experimento`?**
+
+Porque evita eliminar un proyecto mientras existan experimentos relacionados con él. De esta manera se protege la información histórica y se evita perder la relación entre los experimentos y el proyecto al que pertenecen.
+
+### Pregunta 3
+
+**¿Por qué guardar `"accuracy:0.95, f1:0.89"` como texto dificulta el trabajo analítico?**
+
+Porque varias métricas están almacenadas dentro de una sola columna de texto. Esto dificulta realizar consultas, filtros, comparaciones y operaciones sobre cada métrica de manera independiente.
+
+### Pregunta 4
+
+**¿Por qué `nombre_dataset` pertenece conceptualmente a `dataset` y no a `uso_dataset`?**
+
+Porque `nombre_dataset` describe directamente al dataset y depende de `id_dataset`. `uso_dataset` representa la relación entre un dataset y un experimento, por lo que debe contener los datos propios de esa asociación y no repetir información del dataset.
+
+### Pregunta 5
+
+**¿Qué anomalía de actualización podría aparecer si `nombre_proyecto` estuviera repetido en muchos registros de `experimento`?**
+
+Podría ocurrir una anomalía de actualización, ya que al cambiar el nombre de un proyecto sería necesario modificarlo en varios registros de `experimento`. Si alguno no se actualiza, quedarían datos inconsistentes.
+
+### Pregunta 6
+
+**¿Cuál es la relación entre una correcta transformación E-R → relacional y la normalización?**
+
+Una correcta transformación E-R → relacional mantiene los atributos en las entidades a las que pertenecen y representa las relaciones mediante llaves foráneas o tablas puente. Esto ayuda a evitar la repetición de información y reduce la posibilidad de dependencias parciales y transitivas, facilitando el cumplimiento de la normalización.
+
+---
+
+# Reto de cierre — Explicación con Feynman
+
+### ¿Cómo sé si mi tabla de DataLab está correctamente normalizada y qué debería pasar si elimino un registro que tiene otras tablas relacionadas?
+
+Para saber si una tabla está correctamente normalizada se deben revisar las formas normales.
+
+La **integridad referencial** garantiza que las relaciones entre las tablas sean válidas. Para esto se utilizan las **llaves foráneas (FK)**, que deben hacer referencia a registros existentes en la tabla relacionada.
+
+Cuando se elimina un registro que tiene otras tablas relacionadas, la base de datos debe aplicar la política definida para esa relación:
+
+- `RESTRICT`: impide eliminar el registro padre si existen registros relacionados.
+- `CASCADE`: elimina automáticamente los registros relacionados.
+- `SET NULL`: coloca la llave foránea en `NULL`, siempre que la columna permita valores nulos.
+
+En cuanto a la normalización:
+
+- **1FN:** cada celda debe contener un valor atómico y no debe almacenar listas o varios valores en una sola columna.
+- **2FN:** los atributos no clave deben depender de toda la llave primaria. Es especialmente importante cuando existe una llave primaria compuesta.
+- **3FN:** los atributos no clave deben depender directamente de la llave primaria y no de otros atributos no clave.
+
+Por ejemplo, en DataLab, la tabla `metrica` almacena cada métrica en un registro independiente, relacionada mediante `id_modelo` con la tabla `modelo`. Esto permite consultar y analizar cada métrica individualmente y evita almacenar varias métricas dentro de una sola columna.
+
+---
+
+# Evidencias y cierre del repositorio
+
+Para finalizar la actividad se debe:
+
+- [ ] Actualizar el archivo `.dbml` con las políticas `ON DELETE`.
+- [ ] Exportar el esquema actualizado como `diagramas/relacional/s04-esquema-integridad.png`.
+- [ ] Actualizar `documentacion/decisiones.md`.
+- [ ] Realizar `git add .`.
+- [ ] Realizar el commit con el mensaje:
+
+`git commit -m "modelo: políticas de integridad referencial y auditoría de normalización de DataLab"`
+
+- [ ] Realizar `git push`.
+- [ ] Verificar que la contribución individual de cada integrante pueda identificarse en Git.
+
+---
+
+# Relación con la Semana 5
+
+La Semana 4 deja preparado el modelo para pasar al diseño físico. La secuencia del proyecto queda así:
+
+**Modelo E-R → Modelo relacional → Tablas, columnas y tipos → Integridad referencial → Normalización → Diseño físico → CREATE TABLE → Base de datos ejecutada en un motor real.**
+
+Las decisiones tomadas sobre las llaves foráneas, las políticas `ON DELETE` y la normalización servirán como base para la creación de las tablas mediante DDL en la Semana 5.
 
 ## Avance hacia el Hito 2
 
